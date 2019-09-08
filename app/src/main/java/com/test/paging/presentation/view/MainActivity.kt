@@ -19,7 +19,9 @@ import android.graphics.drawable.Drawable
 import android.util.Log
 import androidx.lifecycle.Observer
 import androidx.paging.PagedList
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.test.paging.GlideApp
+import com.test.paging.data.NetworkState
 import com.test.paging.data.entity.ItemsItem
 import com.test.paging.presentation.adapter.RepositoryAdapter
 
@@ -28,12 +30,11 @@ class MainActivity : BaseActivity() {
     @Inject
     lateinit var repositoryGithubUseCase: RepositoryGithubUseCase
 
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-
     lateinit var mainViewModel: MainViewModel
 
     lateinit var editQuery: EditText
     lateinit var recyclerView: RecyclerView
+    lateinit var swipeRefreshLayout: SwipeRefreshLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,10 +46,11 @@ class MainActivity : BaseActivity() {
 
         editQuery = findViewById(R.id.edit_query)
         recyclerView = findViewById(R.id.recycler_view)
+        swipeRefreshLayout = findViewById(R.id.swipe_refresh_layout)
 
         setEditQueryTintColor()
-
         initAdapter()
+        initSwipeRefreshLayout()
     }
 
     private fun initAdapter() {
@@ -58,7 +60,6 @@ class MainActivity : BaseActivity() {
         }
 
         recyclerView.adapter = adapter
-        Log.d("myLogs", "rot init adapter")
         mainViewModel.repositoryList.observe(this, Observer<PagedList<ItemsItem>> {
             adapter.submitList(it)
         })
@@ -66,6 +67,13 @@ class MainActivity : BaseActivity() {
         mainViewModel.getNetworkState().observe(this, Observer {
             adapter.setNetworkState(it)
         })
+    }
+
+    private fun initSwipeRefreshLayout() {
+        mainViewModel.getRefreshState().observe(this, Observer {
+            swipeRefreshLayout.isRefreshing = it == NetworkState.LOADING
+        })
+        swipeRefreshLayout.setOnRefreshListener { mainViewModel.refresh() }
     }
 
     //for pre-23 API devices
