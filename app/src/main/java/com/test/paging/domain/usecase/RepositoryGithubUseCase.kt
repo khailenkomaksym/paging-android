@@ -13,8 +13,8 @@ constructor(private val networkRepository: NetworkRepository){
         networkRepository.retry()
     }
 
-    fun refresh() {
-        networkRepository.refresh()
+    fun refresh(query: String) {
+        networkRepository.refresh(query)
     }
 
     fun fetchRepositories(): Listing<ItemsItem> {

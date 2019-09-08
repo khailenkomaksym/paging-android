@@ -9,7 +9,7 @@ interface NetworkRepository {
 
     fun retry()
 
-    fun refresh()
+    fun refresh(query: String)
 
     fun clear()
 

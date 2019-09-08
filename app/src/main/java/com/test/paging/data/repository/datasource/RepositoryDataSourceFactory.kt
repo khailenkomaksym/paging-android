@@ -13,8 +13,10 @@ class RepositoryDataSourceFactory(
 
     val source = MutableLiveData<RepositoryDataSource>()
 
+    var query: String = ""
+
     override fun create(): DataSource<Int, ItemsItem> {
-        val source = RepositoryDataSource(githubApi, compositeDisposable)
+        val source = RepositoryDataSource(githubApi, compositeDisposable, query)
         this.source.postValue(source)
         return source
     }

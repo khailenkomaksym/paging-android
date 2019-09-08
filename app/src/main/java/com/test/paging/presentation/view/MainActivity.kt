@@ -73,8 +73,12 @@ class MainActivity : BaseActivity() {
         mainViewModel.getRefreshState().observe(this, Observer {
             swipeRefreshLayout.isRefreshing = it == NetworkState.LOADING
         })
-        swipeRefreshLayout.setOnRefreshListener { mainViewModel.refresh() }
+        swipeRefreshLayout.setOnRefreshListener {
+            mainViewModel.refresh(getQuery())
+        }
     }
+
+    private fun getQuery(): String = editQuery.text.toString()
 
     //for pre-23 API devices
     private fun setEditQueryTintColor() {

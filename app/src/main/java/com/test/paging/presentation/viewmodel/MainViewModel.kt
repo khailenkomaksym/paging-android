@@ -25,8 +25,8 @@ class MainViewModel @Inject constructor(val repositoryGithubUseCase: RepositoryG
         repositoryGithubUseCase.retry()
     }
 
-    fun refresh() {
-        repositoryGithubUseCase.refresh()
+    fun refresh(query: String) {
+        repositoryGithubUseCase.refresh(query)
     }
 
     fun getNetworkState(): LiveData<NetworkState> {

@@ -13,7 +13,8 @@ import io.reactivex.schedulers.Schedulers
 
 class RepositoryDataSource(
     val githubAPI: GithubAPI,
-    val compositeDisposable: CompositeDisposable
+    val compositeDisposable: CompositeDisposable,
+    val query: String
 ) : PageKeyedDataSource<Int, ItemsItem>() {
 
     private val networkState: MutableLiveData<NetworkState> = MutableLiveData()
@@ -39,13 +40,15 @@ class RepositoryDataSource(
 
         //get the initial users from the api
         compositeDisposable.add(
-            githubAPI.getRepositoryResponse(1).subscribe({ response ->
+            githubAPI.getRepositoryResponse(1)
+                .map {it.items?.filter{ itemsItem -> itemsItem?.fullName?.contains(query) == true }}
+                .subscribe({ response ->
                 // clear retry since last request succeeded
                 setRetry(null)
                 networkState.postValue(NetworkState.LOADED)
                 initialLoad.postValue(NetworkState.LOADED)
 
-                val items = response?.items ?: emptyList()
+                val items = response ?: emptyList()
 
                 callback.onResult(items, null, 2)
             },
@@ -63,14 +66,18 @@ class RepositoryDataSource(
     override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, ItemsItem>) {
         networkState.postValue(NetworkState.LOADING)
 
+        Log.d("myLogs", "query: " + query)
+
         //get the users from the api after id
         compositeDisposable.add(
-            githubAPI.getRepositoryResponse(params.key).subscribe({ response ->
+            githubAPI.getRepositoryResponse(params.key)
+                .map {it.items?.filter{ itemsItem -> itemsItem?.fullName?.contains(query) == true }}
+                .subscribe({ response ->
                 // clear retry since last request succeeded
                 setRetry(null)
                 networkState.postValue(NetworkState.LOADED)
 
-                val items = response?.items ?: emptyList()
+                val items = response ?: emptyList()
 
                 callback.onResult(items, params.key + 1)
             },

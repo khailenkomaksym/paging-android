@@ -1,5 +1,6 @@
 package com.test.paging.data.repository
 
+import android.util.Log
 import androidx.lifecycle.Transformations.switchMap
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
@@ -42,7 +43,8 @@ class NetworkRepositoryImpl
         repositoryDataSourceFactory.getRepositoryDataSource().value?.retry()
     }
 
-    override fun refresh() {
+    override fun refresh(query: String) {
+        repositoryDataSourceFactory.query = query
         repositoryDataSourceFactory.getRepositoryDataSource().value?.invalidate()
     }
 
