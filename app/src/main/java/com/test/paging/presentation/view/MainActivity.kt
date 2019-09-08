@@ -16,6 +16,10 @@ import com.test.paging.presentation.viewmodel.MainViewModelFactory
 import javax.inject.Inject
 import androidx.core.graphics.drawable.DrawableCompat
 import android.graphics.drawable.Drawable
+import android.util.Log
+import androidx.paging.PagedList
+import com.test.paging.GlideApp
+import com.test.paging.presentation.adapter.RepositoryAdapter
 
 class MainActivity : BaseActivity() {
 
@@ -41,6 +45,21 @@ class MainActivity : BaseActivity() {
         recyclerView = findViewById(R.id.recycler_view)
 
         setEditQueryTintColor()
+    }
+
+    private fun initAdapter() {
+        val glide = GlideApp.with(this)
+        val adapter = RepositoryAdapter(glide) {
+            //model.retry()
+        }
+        /*list.adapter = adapter
+        Log.d("myLogs", "rot init adapter")
+        model.posts.observe(this, Observer<PagedList<RedditPost>> {
+            adapter.submitList(it)
+        })
+        model.networkState.observe(this, Observer {
+            adapter.setNetworkState(it)
+        })*/
     }
 
     //for pre-23 API devices

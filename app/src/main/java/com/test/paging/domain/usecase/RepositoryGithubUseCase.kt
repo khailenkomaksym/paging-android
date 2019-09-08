@@ -10,17 +10,10 @@ import javax.inject.Inject
 
 class RepositoryGithubUseCase
 @Inject
-constructor(
-    threadExecutor: ThreadExecutor,
-    postExecutionThread: PostExecutionThread,
-    private val networkRepository: NetworkRepository
-) : ObservableUseCase<RepositoryResponse, Unit>(threadExecutor, postExecutionThread) {
+constructor(private val networkRepository: NetworkRepository){
 
     var page: Int = 0
-    var perPage: Int = 0
 
-    override fun buildUseCaseObservable(params: Unit?): Observable<RepositoryResponse> {
-        return networkRepository.getRepositoryList(page, perPage)
-    }
+    fun getRepositoryList(page: Int) = networkRepository.getRepositoryList(page)
 
 }
