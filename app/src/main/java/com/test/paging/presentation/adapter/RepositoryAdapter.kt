@@ -18,7 +18,7 @@ class RepositoryAdapter(
     private var query = ""
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (getItemViewType(position)) {
-            R.layout.item_repository -> (holder as RepositoryItemViewHolder).bind(getItem(position))
+            R.layout.item_repository -> (holder as RepositoryItemViewHolder).bind(getItem(position), query)
             R.layout.item_network_state -> (holder as NetworkStateItemViewHolder).bindTo(
                     networkState)
         }
@@ -33,7 +33,7 @@ class RepositoryAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
-            R.layout.item_repository -> RepositoryItemViewHolder.create(parent, glide, query, colorHighlight)
+            R.layout.item_repository -> RepositoryItemViewHolder.create(parent, glide, colorHighlight)
             R.layout.item_network_state -> NetworkStateItemViewHolder.create(parent, retryCallback)
             else -> throw IllegalArgumentException("unknown view type $viewType")
         }
@@ -74,13 +74,12 @@ class RepositoryAdapter(
     }
 
     companion object {
-        private val PAYLOAD_SCORE = Any()
         val POST_COMPARATOR = object : DiffUtil.ItemCallback<ItemsItem>() {
+            override fun areItemsTheSame(oldItem: ItemsItem, newItem: ItemsItem): Boolean =
+                oldItem.id == newItem.id
+
             override fun areContentsTheSame(oldItem: ItemsItem, newItem: ItemsItem): Boolean =
                     oldItem == newItem
-
-            override fun areItemsTheSame(oldItem: ItemsItem, newItem: ItemsItem): Boolean =
-                    oldItem.id == newItem.id
         }
     }
 }

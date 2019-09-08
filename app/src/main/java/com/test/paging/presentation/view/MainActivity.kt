@@ -90,7 +90,7 @@ class MainActivity : BaseActivity() {
         editQuery.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 if (!s.isNullOrEmpty()) {
-                    adapter.setQuery(getQuery())
+                    adapter.setQuery(s.toString())
                     mainViewModel.refresh(s.toString())
                 }
             }

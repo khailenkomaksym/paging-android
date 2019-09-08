@@ -19,15 +19,17 @@ import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
 import java.util.regex.Pattern
 
-class RepositoryItemViewHolder(view: View, private val glide: GlideRequests, private val query: String, private val colorHighlight: Int) : RecyclerView.ViewHolder(view) {
+class RepositoryItemViewHolder(view: View, private val glide: GlideRequests, private val colorHighlight: Int) : RecyclerView.ViewHolder(view) {
     private val textLogin: TextView = view.findViewById(R.id.text_login)
     private val textFullname: TextView = view.findViewById(R.id.text_fullname)
     private val textDate: TextView = view.findViewById(R.id.text_date)
     private val imageProfile : ImageView = view.findViewById(R.id.image_profile)
     private var repository : ItemsItem? = null
+    private var query = ""
 
-    fun bind(repository: ItemsItem?) {
+    fun bind(repository: ItemsItem?, query: String) {
         this.repository = repository
+        this.query = query
 
         textLogin.text = repository?.owner?.login
         textFullname.text = repository?.fullName
@@ -75,10 +77,10 @@ class RepositoryItemViewHolder(view: View, private val glide: GlideRequests, pri
     }
 
     companion object {
-        fun create(parent: ViewGroup, glide: GlideRequests, query: String, colorHighlight: Int): RepositoryItemViewHolder {
+        fun create(parent: ViewGroup, glide: GlideRequests, colorHighlight: Int): RepositoryItemViewHolder {
             val view = LayoutInflater.from(parent.context)
                 .inflate(R.layout.item_repository, parent, false)
-            return RepositoryItemViewHolder(view, glide, query, colorHighlight)
+            return RepositoryItemViewHolder(view, glide, colorHighlight)
         }
     }
 }
