@@ -38,25 +38,20 @@ class RepositoryDataSource(
         networkState.postValue(NetworkState.LOADING)
         initialLoad.postValue(NetworkState.LOADING)
 
-        //get the initial users from the api
         compositeDisposable.add(
-            githubAPI.getRepositoryResponse(1)
-                .map {it.items?.filter{ itemsItem -> itemsItem?.fullName?.contains(query) == true }}
+            githubAPI.getRepositoryResponse(1, query)
                 .subscribe({ response ->
-                // clear retry since last request succeeded
                 setRetry(null)
                 networkState.postValue(NetworkState.LOADED)
                 initialLoad.postValue(NetworkState.LOADED)
 
-                val items = response ?: emptyList()
+                val items = response?.items ?: emptyList()
 
                 callback.onResult(items, null, 2)
             },
                 { throwable ->
-                    // keep a Completable for future retry
                     setRetry { loadInitial(params, callback) }
                     val error = NetworkState.error(throwable.message)
-                    // publish the error
                     networkState.postValue(error)
                     initialLoad.postValue(error)
                 })
@@ -66,25 +61,18 @@ class RepositoryDataSource(
     override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, ItemsItem>) {
         networkState.postValue(NetworkState.LOADING)
 
-        Log.d("myLogs", "query: " + query)
-
-        //get the users from the api after id
         compositeDisposable.add(
-            githubAPI.getRepositoryResponse(params.key)
-                .map {it.items?.filter{ itemsItem -> itemsItem?.fullName?.contains(query) == true }}
+            githubAPI.getRepositoryResponse(params.key, query)
                 .subscribe({ response ->
-                // clear retry since last request succeeded
                 setRetry(null)
                 networkState.postValue(NetworkState.LOADED)
 
-                val items = response ?: emptyList()
+                val items = response?.items ?: emptyList()
 
                 callback.onResult(items, params.key + 1)
             },
                 { throwable ->
-                    // keep a Completable for future retry
                     setRetry { loadAfter(params, callback) }
-                    // publish the error
                     networkState.postValue(NetworkState.error(throwable.message))
                 })
         )
@@ -108,20 +96,4 @@ class RepositoryDataSource(
             this.retryCompletable = Completable.fromAction(action)
         }
     }
-
-    /**
-     * Map the user raw to the safe user
-     *
-     * @param userRawList the user raw list from the api
-     * @return list of the safe user list after mapping
-     */
-    /*private fun getAndMapUsers(userRawList: Single<List<UserRaw>>): Single<List<User>> {
-        return userRawList.flatMapObservable(Function<List<UserRaw>, ObservableSource<*>> {
-            Observable.fromIterable(
-                it
-            )
-        })
-            .map(userMapper)
-            .toList()
-    }*/
 }

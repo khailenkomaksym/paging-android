@@ -9,7 +9,7 @@ import retrofit2.http.Query
 
 interface GithubAPI {
 
-    @GET("search/repositories?per_page=30&q=fac")
-    fun getRepositoryResponse(@Query("page") page: Int): Single<RepositoryResponse>
+    @GET("search/repositories?per_page=30")
+    fun getRepositoryResponse(@Query("page") page: Int, @Query("q") query: String): Single<RepositoryResponse>
 
 }

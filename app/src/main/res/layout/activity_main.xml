@@ -17,6 +17,7 @@
             android:id="@+id/edit_query"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:text="@string/default_query"
             android:background="@color/colorEditQuery"
             android:drawableStart="@drawable/baseline_search_black_24"
             android:padding="5dp"/>

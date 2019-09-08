@@ -16,6 +16,8 @@ import com.test.paging.presentation.viewmodel.MainViewModelFactory
 import javax.inject.Inject
 import androidx.core.graphics.drawable.DrawableCompat
 import android.graphics.drawable.Drawable
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import androidx.lifecycle.Observer
 import androidx.paging.PagedList
@@ -51,6 +53,7 @@ class MainActivity : BaseActivity() {
         setEditQueryTintColor()
         initAdapter()
         initSwipeRefreshLayout()
+        initEditQuery()
     }
 
     private fun initAdapter() {
@@ -76,6 +79,23 @@ class MainActivity : BaseActivity() {
         swipeRefreshLayout.setOnRefreshListener {
             mainViewModel.refresh(getQuery())
         }
+    }
+
+    private fun initEditQuery() {
+        editQuery.setSelection(getQuery().length)
+        editQuery.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                if (!s.isNullOrEmpty()) {
+                    mainViewModel.refresh(s.toString())
+                }
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+        })
     }
 
     private fun getQuery(): String = editQuery.text.toString()
