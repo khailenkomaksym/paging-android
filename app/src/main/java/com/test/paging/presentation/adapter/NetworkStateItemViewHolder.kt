@@ -8,8 +8,8 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.test.paging.R
-import com.test.paging.data.repository.NetworkState
-import com.test.paging.data.repository.Status
+import com.test.paging.data.NetworkState
+import com.test.paging.data.Status
 
 class NetworkStateItemViewHolder(view: View,
                                  private val retryCallback: () -> Unit)

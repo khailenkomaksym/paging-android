@@ -1,10 +1,16 @@
 package com.test.paging.domain.repository
 
-import com.test.paging.data.entity.RepositoryResponse
-import io.reactivex.Single
+import com.test.paging.data.repository.Listing
+import com.test.paging.data.entity.ItemsItem
 
 interface NetworkRepository {
 
-    fun getRepositoryList(page: Int): Single<RepositoryResponse>
+    fun fetchRepositories(): Listing<ItemsItem>
+
+    fun retry()
+
+    fun refresh()
+
+    fun clear()
 
 }

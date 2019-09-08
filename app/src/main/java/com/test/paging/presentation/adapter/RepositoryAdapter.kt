@@ -1,6 +1,5 @@
 package com.test.paging.presentation.adapter
 
-import android.content.Context
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -8,7 +7,7 @@ import android.view.ViewGroup
 import com.test.paging.GlideRequests
 import com.test.paging.R
 import com.test.paging.data.entity.ItemsItem
-import com.test.paging.data.repository.NetworkState
+import com.test.paging.data.NetworkState
 
 class RepositoryAdapter(
     private val glide: GlideRequests,
