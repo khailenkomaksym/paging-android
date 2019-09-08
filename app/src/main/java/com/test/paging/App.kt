@@ -1,5 +1,6 @@
 package com.test.paging
 
+import com.test.paging.di.component.DaggerApplicationComponent
 import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
 
