@@ -5,10 +5,11 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface GithubAPI {
 
-    @GET("search/repositories?page={page}&per_page=30&q=fac")
-    fun getRepositoryResponse(@Path(value = "page", encoded = true) page: Int): Single<RepositoryResponse>
+    @GET("search/repositories?per_page=30&q=fac")
+    fun getRepositoryResponse(@Query("page") page: Int): Single<RepositoryResponse>
 
 }
