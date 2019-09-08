@@ -5,7 +5,7 @@ import com.test.paging.data.entity.ItemsItem
 
 interface NetworkRepository {
 
-    fun fetchRepositories(): Listing<ItemsItem>
+    fun fetchRepositories(query: String): Listing<ItemsItem>
 
     fun retry()
 

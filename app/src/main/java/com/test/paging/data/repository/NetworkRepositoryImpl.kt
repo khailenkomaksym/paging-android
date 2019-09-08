@@ -22,7 +22,8 @@ class NetworkRepositoryImpl
 
     private val repositoryDataSourceFactory: RepositoryDataSourceFactory = RepositoryDataSourceFactory(githubAPI, compositeDisposable)
 
-    override fun fetchRepositories(): Listing<ItemsItem> {
+    override fun fetchRepositories(query: String): Listing<ItemsItem> {
+        repositoryDataSourceFactory.query = query
 
         val config = PagedList.Config.Builder()
             .setPageSize(pageSize)

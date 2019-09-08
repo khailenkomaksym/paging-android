@@ -1,5 +1,6 @@
 package com.test.paging.presentation.adapter
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,9 +13,13 @@ import com.test.paging.data.entity.ItemsItem
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
+import android.text.Spannable
+import android.text.style.BackgroundColorSpan
+import android.text.SpannableStringBuilder
+import android.text.style.ForegroundColorSpan
+import java.util.regex.Pattern
 
-
-class RepositoryItemViewHolder(view: View, private val glide: GlideRequests) : RecyclerView.ViewHolder(view) {
+class RepositoryItemViewHolder(view: View, private val glide: GlideRequests, private val query: String, private val colorHighlight: Int) : RecyclerView.ViewHolder(view) {
     private val textLogin: TextView = view.findViewById(R.id.text_login)
     private val textFullname: TextView = view.findViewById(R.id.text_fullname)
     private val textDate: TextView = view.findViewById(R.id.text_date)
@@ -36,6 +41,8 @@ class RepositoryItemViewHolder(view: View, private val glide: GlideRequests) : R
             e.printStackTrace()
         }
 
+        highlightQuery(textFullname.text.toString(), query, textFullname)
+
         if (repository?.owner?.avatarUrl?.startsWith("http") == true) {
 
             imageProfile.visibility = View.VISIBLE
@@ -52,11 +59,26 @@ class RepositoryItemViewHolder(view: View, private val glide: GlideRequests) : R
         }
     }
 
+    private fun highlightQuery(sourceText: String, highlightText: String, textView: TextView) {
+        val sb = SpannableStringBuilder(sourceText)
+        val p = Pattern.compile(highlightText, Pattern.CASE_INSENSITIVE)
+        val m = p.matcher(sourceText)
+        while (m.find()) {
+            sb.setSpan(
+                ForegroundColorSpan(colorHighlight),
+                m.start(),
+                m.end(),
+                Spannable.SPAN_INCLUSIVE_INCLUSIVE
+            )
+        }
+        textView.text = sb
+    }
+
     companion object {
-        fun create(parent: ViewGroup, glide: GlideRequests): RepositoryItemViewHolder {
+        fun create(parent: ViewGroup, glide: GlideRequests, query: String, colorHighlight: Int): RepositoryItemViewHolder {
             val view = LayoutInflater.from(parent.context)
                 .inflate(R.layout.item_repository, parent, false)
-            return RepositoryItemViewHolder(view, glide)
+            return RepositoryItemViewHolder(view, glide, query, colorHighlight)
         }
     }
 }

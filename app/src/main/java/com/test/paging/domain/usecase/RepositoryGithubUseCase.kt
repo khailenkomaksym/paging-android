@@ -17,8 +17,8 @@ constructor(private val networkRepository: NetworkRepository){
         networkRepository.refresh(query)
     }
 
-    fun fetchRepositories(): Listing<ItemsItem> {
-        return networkRepository.fetchRepositories()
+    fun fetchRepositories(query: String): Listing<ItemsItem> {
+        return networkRepository.fetchRepositories(query)
     }
 
     fun clear() {

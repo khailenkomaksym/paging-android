@@ -11,9 +11,11 @@ import com.test.paging.data.NetworkState
 
 class RepositoryAdapter(
     private val glide: GlideRequests,
+    private val colorHighlight: Int,
     private val retryCallback: () -> Unit)
     : PagedListAdapter<ItemsItem, RecyclerView.ViewHolder>(POST_COMPARATOR) {
     private var networkState: NetworkState? = null
+    private var query = ""
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (getItemViewType(position)) {
             R.layout.item_repository -> (holder as RepositoryItemViewHolder).bind(getItem(position))
@@ -31,7 +33,7 @@ class RepositoryAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
-            R.layout.item_repository -> RepositoryItemViewHolder.create(parent, glide)
+            R.layout.item_repository -> RepositoryItemViewHolder.create(parent, glide, query, colorHighlight)
             R.layout.item_network_state -> NetworkStateItemViewHolder.create(parent, retryCallback)
             else -> throw IllegalArgumentException("unknown view type $viewType")
         }
@@ -65,6 +67,10 @@ class RepositoryAdapter(
         } else if (hasExtraRow && previousState != newNetworkState) {
             notifyItemChanged(itemCount - 1)
         }
+    }
+
+    fun setQuery(query: String) {
+        this.query = query
     }
 
     companion object {

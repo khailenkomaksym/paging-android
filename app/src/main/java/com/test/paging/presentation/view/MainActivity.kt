@@ -38,17 +38,19 @@ class MainActivity : BaseActivity() {
     lateinit var recyclerView: RecyclerView
     lateinit var swipeRefreshLayout: SwipeRefreshLayout
 
+    lateinit var adapter: RepositoryAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         supportActionBar?.elevation = 0f
 
-        mainViewModel = ViewModelProviders.of(this, MainViewModelFactory(repositoryGithubUseCase))[MainViewModel::class.java]
-
         editQuery = findViewById(R.id.edit_query)
         recyclerView = findViewById(R.id.recycler_view)
         swipeRefreshLayout = findViewById(R.id.swipe_refresh_layout)
+
+        mainViewModel = ViewModelProviders.of(this, MainViewModelFactory(repositoryGithubUseCase, getQuery()))[MainViewModel::class.java]
 
         setEditQueryTintColor()
         initAdapter()
@@ -58,9 +60,11 @@ class MainActivity : BaseActivity() {
 
     private fun initAdapter() {
         val glide = GlideApp.with(this)
-        val adapter = RepositoryAdapter(glide) {
+        val colorHighlight = ContextCompat.getColor(this, R.color.colorAccent)
+        adapter = RepositoryAdapter(glide, colorHighlight) {
             mainViewModel.retry()
         }
+        adapter.setQuery(getQuery())
 
         recyclerView.adapter = adapter
         mainViewModel.repositoryList.observe(this, Observer<PagedList<ItemsItem>> {
@@ -86,6 +90,7 @@ class MainActivity : BaseActivity() {
         editQuery.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 if (!s.isNullOrEmpty()) {
+                    adapter.setQuery(getQuery())
                     mainViewModel.refresh(s.toString())
                 }
             }

@@ -11,13 +11,13 @@ import com.test.paging.domain.repository.NetworkRepository
 import com.test.paging.domain.usecase.RepositoryGithubUseCase
 import javax.inject.Inject
 
-class MainViewModel @Inject constructor(val repositoryGithubUseCase: RepositoryGithubUseCase) : ViewModel() {
+class MainViewModel @Inject constructor(val repositoryGithubUseCase: RepositoryGithubUseCase, val query: String) : ViewModel() {
 
     var repositoryList: LiveData<PagedList<ItemsItem>>
     private val repositoryListing: Listing<ItemsItem>
 
     init {
-        repositoryListing = repositoryGithubUseCase.fetchRepositories()
+        repositoryListing = repositoryGithubUseCase.fetchRepositories(query)
         repositoryList = repositoryListing.pagedList
     }
 
